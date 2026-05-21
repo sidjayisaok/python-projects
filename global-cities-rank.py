@@ -5,6 +5,7 @@ import pandas as pd
 from shapely.geometry import Point
 from geopy.geocoders import GoogleV3
 import time
+import os
 
 matplotlib.use("Agg")
 
@@ -14,7 +15,7 @@ df = pd.DataFrame({
     'Country': ['United States','United States','Canada','United States','United States','Canada','United States','United States','United States','United States','United States','United States','Canada','United States','United States','United States','Canada','United States','United States','United States','United States','United States','United States','United States','United States','United States','United States','United States','Canada','United States','United States','United States','United States','United States','United States','United States','Canada']
 })
 
-API_KEY = "AIzaSyCdN7cW_qW9W5F1T-RY3aoQMQnDFRrIRXU"
+API_KEY = os.getenv("GOOGLE_API_KEY")
 
 geolocator = GoogleV3(api_key=API_KEY, timeout=10)
 
