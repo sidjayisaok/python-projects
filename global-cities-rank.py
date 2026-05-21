@@ -1,36 +1,52 @@
 import geopandas as gpd
+import matplotlib
 import matplotlib.pyplot as plt
 import pandas as pd
 from shapely.geometry import Point
-from geopy.geocoders import Nominatim
+from geopy.geocoders import GoogleV3
+import time
 
-df =  pd.DataFrame({
+matplotlib.use("Agg")
+
+df = pd.DataFrame({
     'City': ['New York City','Los Angeles','Toronto','Chicago','San Francisco','Montreal','Boston','Washington DC','Dallas','Miami','Houston','Atlanta','Vancouver','Denver','Philadelphia','Seattle','Calgary','San Jose','Tampa','Minneapolis','San Diego','Detroit','Austin','Charlotte','Saint Louis','Phoenix','Orlando','Baltimore','Ottawa','Nashville','Cleveland','Kansas City','Milwaukee','Salt Lake City','Columbus','Sacramento','Edmonton'],
     'State': ['NY','CA','ON','IL','CA','QC','MA','DC','TX','FL','TX','GA','BC','CO','PA','WA','AB','CA','FL','MN','CA','MI','TX','NC','MO','AZ','FL','MD','ON','TN','OH','MO','WI','UT','OH','CA','AB'],
-    'Country': ['United States','United States','Canada','United States','United States','Canada','United States','United States','United States','United States','United States','United States','Canada','United States','United States','United States','Canada','United States','United States','United States','United States','United States','United States','United States','United States','United States','United States','United States','Canada','United States','United States','United States','United States','United States','United States','United States','Canada'],
-    'Rank': ['Alpha ++','Alpha','Alpha','Alpha','Alpha -','Alpha -','Alpha -','Beta +','Beta +','Beta +','Beta +','Beta +','Beta +','Beta','Beta','Beta','Beta -','Beta -','Beta -','Beta -','Beta -','Beta -','Beta -','Gamma +','Gamma +','Gamma +','Gamma +','Gamma +','Gamma','Gamma','Gamma -','Gamma -','Gamma -','Gamma -','Gamma -','Gamma -','Gamma -']
+    'Country': ['United States','United States','Canada','United States','United States','Canada','United States','United States','United States','United States','United States','United States','Canada','United States','United States','United States','Canada','United States','United States','United States','United States','United States','United States','United States','United States','United States','United States','United States','Canada','United States','United States','United States','United States','United States','United States','United States','Canada']
 })
 
-geolocator = Nominatim(user_agent="global-cities-rank")
+API_KEY = "AIzaSyCdN7cW_qW9W5F1T-RY3aoQMQnDFRrIRXU"
 
-long = []
+geolocator = GoogleV3(api_key=API_KEY, timeout=10)
+
 lat = []
-coordinates = []
+lon = []
 
-for coordinates in df["City"]:
-    lat += [geolocator.geocode(coordinates).latitude]
-    long += [geolocator.geocode(coordinates).longitude]
-    
+for i, row in df.iterrows():
+    query = f"{row['City']}, {row['State']}, {row['Country']}"
+    location = geolocator.geocode(query)
+
+    lat.append(location.latitude)
+    lon.append(location.longitude)
+
 df['latitude'] = lat
-df['longitude'] = long
-df['coordinates'] = list(zip(lat,long))
-df['coordinates'] = df['coordinates'].apply(Point)
+df['longitude'] = lon
+df['coordinates'] = df.apply(lambda r: Point(r['longitude'], r['latitude']), axis=1)
 
-gdf = gpd.GeoDataFrame(df, geometry="Coordinates")
+gdf = gpd.GeoDataFrame(df, geometry='coordinates')
 gdf.head()
+print(gdf.head())
 
-# print('gdf is : ', type(gdf))
-# print('\ngdf column : ', gdf.geometry.name)
+# Load world map
+world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
 
+# Create figure
+fig, ax = plt.subplots(figsize=(14, 8))
 
+# Plot world map
+world.plot(ax=ax, color='lightgray', edgecolor='white')
 
+# Plot your cities
+gdf.plot(ax=ax, color='red', markersize=50)
+
+# Save output
+plt.savefig("global_cities_map.png", dpi=300, bbox_inches='tight')
