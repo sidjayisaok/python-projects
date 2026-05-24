@@ -1,0 +1,39 @@
+City,State,Country,Global_Rank
+New York City,NY,United States,Alpha++
+Los Angeles,CA,United States,Alpha
+Toronto,ON,Canada,Alpha
+Chicago,IL,United States,Alpha
+San Francisco,CA,United States,Alpha-
+Montreal,QC,Canada,Beta+
+Boston,MA,United States,Alpha-
+Washington DC,DC,United States,Alpha-
+Dallas,TX,United States,Beta+
+Miami,FL,United States,Beta+
+Houston,TX,United States,Alpha-
+Atlanta,GA,United States,Beta+
+Vancouver,BC,Canada,Beta-
+Denver,CO,United States,Beta-
+Philadelphia,PA,United States,Beta-
+Seattle,WA,United States,Beta-
+Calgary,AB,Canada,Beta
+San Jose,CA,United States,Gamma
+Tampa,FL,United States,Gamma
+Minneapolis,MN,United States,Gamma+
+San Diego,CA,United States,Gamma+
+Detroit,MI,United States,Gamma
+Austin,TX,United States,Gamma+
+Charlotte,NC,United States,Gamma-
+Saint Louis,MO,United States,Gamma-
+Phoenix,AZ,United States,Sufficient
+Orlando,FL,United States,Sufficient
+Baltimore,MD,United States,Gamma-
+Ottawa,ON,Canada,Sufficient
+Nashville,TN,United States,Gamma
+Cleveland,OH,United States,Gamma-
+Kansas City,MO,United States,Sufficient
+Milwaukee,WI,United States,Sufficient
+Salt Lake City,UT,United States,Sufficient
+Columbus,OH,United States,Sufficient
+Sacramento,CA,United States,Sufficient
+Edmonton,AB,Canada,Sufficient
+

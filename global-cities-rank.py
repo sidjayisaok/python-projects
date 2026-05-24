@@ -16,13 +16,12 @@ API_KEY = os.getenv("GOOGLE_API_KEY")
 matplotlib.use("Agg")
 
 df = pd.DataFrame({
-    'City': ['New York City','Los Angeles','Toronto','Chicago','San Francisco','Montreal','Boston','Washington DC','Dallas','Miami','Houston','Atlanta','Vancouver','Denver','Philadelphia','Seattle','Calgary','San Jose','Tampa','Minneapolis','San Diego','Detroit','Austin','Charlotte','Saint Louis','Phoenix','Orlando','Baltimore','Ottawa','Nashville','Cleveland','Kansas City','Milwaukee','Salt Lake City','Columbus','Sacramento','Edmonton'],
-    'State': ['NY','CA','ON','IL','CA','QC','MA','DC','TX','FL','TX','GA','BC','CO','PA','WA','AB','CA','FL','MN','CA','MI','TX','NC','MO','AZ','FL','MD','ON','TN','OH','MO','WI','UT','OH','CA','AB'],
-    'Country': ['United States','United States','Canada','United States','United States','Canada','United States','United States','United States','United States','United States','United States','Canada','United States','United States','United States','Canada','United States','United States','United States','United States','United States','United States','United States','United States','United States','United States','United States','Canada','United States','United States','United States','United States','United States','United States','United States','Canada'],
-    'Global_Rank': ['Alpha++','Alpha','Alpha','Alpha','Alpha-','Beta+','Alpha-','Alpha-','Beta+','Beta+','Alpha-','Beta+','Beta-','Beta-','Beta-','Beta-','Beta','Gamma','Gamma','Gamma+','Gamma+','Gamma','Gamma+','Gamma-','Gamma-','Sufficient','Sufficient','Gamma-','Sufficient','Gamma','Gamma-','Sufficient','Sufficient','Sufficient','Sufficient','Sufficient','Sufficient']
+   "City":["New York City","Los Angeles","Toronto","Chicago","San Francisco","Montreal","Boston","Washington DC","Dallas","Miami","Houston","Atlanta","Vancouver","Denver","Philadelphia","Seattle","Calgary","San Jose","Tampa","Minneapolis","San Diego","Detroit","Austin","Charlotte","Saint Louis","Baltimore","Nashville","Cleveland"],
+   "State":["NY","CA","ON","IL","CA","QC","MA","DC","TX","FL","TX","GA","BC","CO","PA","WA","AB","CA","FL","MN","CA","MI","TX","NC","MO","MD","TN","OH"],
+   "Country":["United States","United States","Canada","United States","United States","Canada","United States","United States","United States","United States","United States","United States","Canada","United States","United States","United States","Canada","United States","United States","United States","United States","United States","United States","United States","United States","United States","United States","United States"],
+   "Global_Rank":["Alpha++","Alpha","Alpha","Alpha","Alpha-","Beta+","Alpha-","Alpha-","Beta+","Beta+","Alpha-","Beta+","Beta-","Beta-","Beta-","Beta-","Beta","Gamma","Gamma","Gamma+","Gamma+","Gamma","Gamma+","Gamma-","Gamma-","Gamma-","Gamma","Gamma-"],
+   "Population":[8336817,3898747,2794356,2746388,873965,1762949,675647,689545,1304379,442241,2304580,498715,662248,715522,1603797,737015,1306784,1013240,384959,429954,1386932,639111,964177,874579,301578,585708,689447,372624]
 })
-
-
 
 geolocator = GoogleV3(api_key=API_KEY, timeout=10)
 
@@ -44,32 +43,39 @@ df['Global_Rank'] = df['Global_Rank'].str.strip()
 gdf = gpd.GeoDataFrame(df, geometry='coordinates', crs="EPSG:4326")
 gdf.head()
 print(gdf.head())
-
-# Convert your GeoDataFrame to Web Mercator (required for basemap tiles)
 gdf_web = gdf.to_crs(epsg=3857)
 
 fig, ax = plt.subplots(figsize=(14, 8))
 
 color_map = {
-    'Alpha++': 'red',
-    'Alpha': 'orange',
-    'Alpha-': 'gold',
-    'Beta+': 'green',
-    'Beta': 'cyan',
-    'Beta-': 'blue',
-    'Gamma+': 'purple',
-    'Gamma': 'pink',
-    'Gamma-': 'brown',
-    'Sufficient': 'gray'
+    'Alpha++': '#08306B',
+    'Alpha':   '#08519C',
+    'Alpha-':  '#2171B5',
+    'Beta+':   '#4292C6',
+    'Beta':    '#6BAED6',
+    'Beta-':   '#9ECAE1',
+    'Gamma+':  '#C6DBEF',
+    'Gamma':   '#DEEBF7',
+    'Gamma-':  '#F7FBFF'
 }
+
+# Normalize population to a reasonable size range
+min_size = 20
+max_size = 800
+
+pop_min = gdf_web['Population'].min()
+pop_max = gdf_web['Population'].max()
+
+gdf_web['marker_size'] = (
+    (gdf_web['Population'] - pop_min) / (pop_max - pop_min)
+) * (max_size - min_size) + min_size
 
 gdf_web.plot(
     ax=ax,
     c=gdf_web['Global_Rank'].map(color_map),
-    markersize=70,
+    markersize=gdf_web['marker_size'],
     edgecolor='black',
-    linewidth=1,
-    legend=True
+    linewidth=1
 )
 
 print(gdf_web['Global_Rank'].dtype)
