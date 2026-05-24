@@ -20,7 +20,7 @@ df = pd.DataFrame({
    "State":["NY","CA","ON","IL","CA","QC","MA","DC","TX","FL","TX","GA","BC","CO","PA","WA","AB","CA","FL","MN","CA","MI","TX","NC","MO","MD","TN","OH"],
    "Country":["United States","United States","Canada","United States","United States","Canada","United States","United States","United States","United States","United States","United States","Canada","United States","United States","United States","Canada","United States","United States","United States","United States","United States","United States","United States","United States","United States","United States","United States"],
    "Global_Rank":["Alpha++","Alpha","Alpha","Alpha","Alpha-","Beta+","Alpha-","Alpha-","Beta+","Beta+","Alpha-","Beta+","Beta-","Beta-","Beta-","Beta-","Beta","Gamma","Gamma","Gamma+","Gamma+","Gamma","Gamma+","Gamma-","Gamma-","Gamma-","Gamma","Gamma-"],
-   "Population":[8336817,3898747,2794356,2746388,873965,1762949,675647,689545,1304379,442241,2304580,498715,662248,715522,1603797,737015,1306784,1013240,384959,429954,1386932,639111,964177,874579,301578,585708,689447,372624]
+   "Population":[20140470,12808224,6794356,9461105,4619271,4345626,4873019,6385162,7694138,6146460,7313158,6087762,2600000,2960000,6284127,4103000,1605000,1998460,3183165,3688996,3338330,4392041,2478906,2798429,2807000,2826875,2079038,2040899]
 })
 
 geolocator = GoogleV3(api_key=API_KEY, timeout=10)
